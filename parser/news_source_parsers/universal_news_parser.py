@@ -18,7 +18,7 @@ class UniversalNewsParser:
                 header, text, date = self.parse_page(link)
             except:
                 header, text, date = "", "", ""
-            if (re.search(company, text) is None) and (re.search(company, header)) is None:
+            if (re.search(company.lower(), text.lower()) is None) and (re.search(company.lower(), header.lower())) is None:
                 continue
             for keyword in SEARCH_KEYWORDS:
                 for form in (morph.parse(word=keyword)[0]).lexeme:

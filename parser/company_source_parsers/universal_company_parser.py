@@ -14,7 +14,7 @@ class UniversalCompanyParser:
     def get_news(self):
         for link in self.get_links():
             useful_link = False
-            header, text, date = None, None, None
+            header, text, date = "", "", ""
             try:
                 header, text, date = self.parse_page(link)
             except:
