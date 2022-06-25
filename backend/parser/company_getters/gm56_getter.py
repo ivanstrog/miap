@@ -1,8 +1,8 @@
 import requests
 import re
 from bs4 import BeautifulSoup
-from constants import SEARCH_KEYWORDS
-from company_getters.universal_company_link_getter import UniversalCompanyLinkGetter
+from parser.constants import SEARCH_KEYWORDS
+from parser.company_getters.universal_company_link_getter import UniversalCompanyLinkGetter
 
 
 def gm56_page_maker(page_number, keyword):

@@ -1,6 +1,6 @@
 import re
 import pymorphy2
-from constants import SEARCH_KEYWORDS
+from parser.constants import SEARCH_KEYWORDS
 
 morph = pymorphy2.MorphAnalyzer()
 

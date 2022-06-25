@@ -1,6 +1,6 @@
 import requests
 import re
-from constants import SEARCH_KEYWORDS, COMPANIES
+from parser.constants import SEARCH_KEYWORDS, COMPANIES
 
 
 class UniversalNewsLinkGetter:

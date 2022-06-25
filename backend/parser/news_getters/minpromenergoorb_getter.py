@@ -1,8 +1,8 @@
 import requests
 import re
 from bs4 import BeautifulSoup
-from constants import SEARCH_KEYWORDS
-from news_getters.universal_news_link_getter import UniversalNewsLinkGetter
+from parser.constants import SEARCH_KEYWORDS
+from parser.news_getters.universal_news_link_getter import UniversalNewsLinkGetter
 
 
 def minpromenergoorb_page_maker(page_number, company):
