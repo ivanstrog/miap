@@ -35,6 +35,7 @@ function News({state, setState, clicked}) {
 
     const [response, setResponse] = useState({});
     const [arc, setArc] = useState([]);
+    const [tm, setTm] = useState(999999999);
 
     useEffect(() => {
         console.log(contains(arc, 62));
@@ -42,6 +43,11 @@ function News({state, setState, clicked}) {
 
     useEffect(() => {
         console.log(packer_(state));
+        try {
+            setTm(state['time'].getTime() / 1000);
+        } catch (e) {
+            setTm(999999999);
+        }
     }, [state]);
 
     useEffect(() => {
@@ -78,7 +84,7 @@ function News({state, setState, clicked}) {
     }}>
         {
             response['series'].map((elem, index) => {
-                return contains(arc, elem['id']) ? null :
+                return (contains(arc, elem['id']) || tm > elem['date']) ? null :
                     <Card
                         key={index}
                         category={elem['category']}
