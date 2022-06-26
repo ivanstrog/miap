@@ -84,7 +84,7 @@ function News({state, setState, clicked}) {
     }}>
         {
             response['series'].map((elem, index) => {
-                return (contains(arc, elem['id']) || tm > elem['date']) ? null :
+                return (contains(arc, elem['id']) || (tm > elem['date'] && elem['date'] !== 0)) ? null :
                     <Card
                         key={index}
                         category={elem['category']}
