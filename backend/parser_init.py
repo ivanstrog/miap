@@ -71,8 +71,10 @@ def update():
             print(datetime.datetime.now())
             print(time.time())
             index += 1
-
-            add_to_db(res)
+            try:
+                add_to_db(res)
+            except:
+                pass
             
     for company, get_links, parse_page in COMPANY_SETUPS:
         parser = UniversalCompanyParser(company, get_links, parse_page)
@@ -84,8 +86,10 @@ def update():
             print(datetime.datetime.now())
             print(time.time())
             index += 1
-
-            add_to_db(res)
+            try:
+                add_to_db(res)
+            except:
+                pass
 
 
 if __name__ == "__main__":
