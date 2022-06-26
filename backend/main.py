@@ -305,7 +305,14 @@ def get_zip(
             my_file.write(f"Категория инвестиционной активности    {post.link}")
             my_file.write('\n')
             my_file.write('\n')
-            my_file.write(f"\n Подтверждающие документы( html код страницы): \n    {post.doc}")
+
+            try:
+                with open(f"storage/{post.id}.html",'wr') as html_file:
+                    html_code = html_file.read()
+
+                my_file.write(f"\n Подтверждающие документы( html код страницы): \n    {html_code}")
+            except Exception as e:
+                print(e)
             my_file.close()
             myzip.write(filename)
 
