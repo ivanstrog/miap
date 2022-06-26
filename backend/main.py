@@ -16,7 +16,7 @@ from threading import Thread
 from database_adapter.post_adapter import PostDatabaseAdapter
 from fastapi.responses import FileResponse
 
-from parser import update
+from parser_init import update
 
 app = FastAPI(title='Miap Api')
 
@@ -244,6 +244,12 @@ def get_docx(
 @app.get('/get_post/', response_model=BasePost)
 def get_post_by_id(post_id: int, post_adapter: PostDatabaseAdapter = Depends()):
     return post_adapter.get_post_by_id(post_id=post_id)
+
+@app.get('/update_database/')
+def get_post_by_id():
+    t = Thread(target=update)
+    t.start()
+    return "обновление запустилось"
 
 
 if __name__ == '__main__':
