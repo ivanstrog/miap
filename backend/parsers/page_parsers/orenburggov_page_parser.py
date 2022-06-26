@@ -1,5 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
+from parsers.constants import TZ, MONTHS_SR
+from datetime import datetime
 
 
 def orenburggov_page_parser(link):
@@ -12,4 +14,12 @@ def orenburggov_page_parser(link):
     header = " ".join(parse_soup.find("div", "news-detail__top").text.strip().split()[2:])
     text = parse_soup.find("div", "news-detail__detail").get_text().strip()
     date = " ".join(parse_soup.find("div", "news-detail__date").text.strip().split()[2:])
+    try:
+        d,m,y,t = date.split()
+        d = int(d)
+        m = MONTHS_SR.index(m.lower()) + 1
+        y = int(y)
+        date = datetime(y, m, d, tzinfo=TZ).timestamp()
+    except:
+        date = None
     return header, text, date
