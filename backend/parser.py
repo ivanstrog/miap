@@ -1,10 +1,10 @@
 import datetime
 import time
 
-from parser.news_source_parsers.universal_news_parser import UniversalNewsParser
-from parser.news_source_parsers.callable_pairs import CALLABLE_PAIRS
-from parser.company_source_parsers.company_setups import COMPANY_SETUPS
-from parser.company_source_parsers.universal_company_parser import UniversalCompanyParser
+from parsers.news_source_parsers.universal_news_parser import UniversalNewsParser
+from parsers.news_source_parsers.callable_pairs import CALLABLE_PAIRS
+from parsers.company_source_parsers.company_setups import COMPANY_SETUPS
+from parsers.company_source_parsers.universal_company_parser import UniversalCompanyParser
 
 
 from  database_adapter.post_adapter import PostDatabaseAdapter
