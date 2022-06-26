@@ -270,7 +270,10 @@ def get_zip(
                                                     max_time=max_time,
                                                     archive=archive)
 
-    os.chdir("backend")
+    try:
+        os.chdir("backend")
+    except Exception as e:
+        print(e)
     dir = 'data'
     if os.path.exists(dir):
         shutil.rmtree(dir)
@@ -283,7 +286,7 @@ def get_zip(
     with ZipFile(file_path, 'w') as myzip:
         for post in posts_data.series:
             filename = f"{dir}/{post.company_name}_{post.category}_{datetime.datetime.now()}.txt"
-            my_file = open(filename, "w")
+            my_file = open(filename, "w+")
             my_file.write(f"id в базе данных :    {post.id}")
             my_file.write('\n')
             my_file.write('\n')
@@ -307,10 +310,10 @@ def get_zip(
             my_file.write('\n')
 
             try:
-                with open(f"storage/{post.id}.html",'wr') as html_file:
+                with open(f"storage/{post.link}.html",'w+') as html_file:
                     html_code = html_file.read()
+                    my_file.write(f"\n Подтверждающие документы( html код страницы): \n    {html_code}")
 
-                my_file.write(f"\n Подтверждающие документы( html код страницы): \n    {html_code}")
             except Exception as e:
                 print(e)
             my_file.close()
