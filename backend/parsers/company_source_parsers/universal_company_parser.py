@@ -15,10 +15,10 @@ class UniversalCompanyParser:
         for link in self.get_links():
             useful_link = False
             header, text, date = "", "", ""
-            #try:
-            header, text, date = self.parse_page(link)
-            #except:
-            #    header, text, date = "", "", ""
+            try:
+                header, text, date = self.parse_page(link)
+            except:
+                header, text, date = "", "", ""
             for keyword in SEARCH_KEYWORDS:
                 for form in (morph.parse(word=keyword)[0]).lexeme:
                     if re.search(form.word, text.lower()) is not None:
