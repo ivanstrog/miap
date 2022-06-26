@@ -285,7 +285,7 @@ def get_zip(
     file_path = 'data.zip'
     with ZipFile(file_path, 'w') as myzip:
         for post in posts_data.series:
-            filename = (f"{dir}/{post.company_name}_{post.category}.txt").replace(' ', '').replace('.', '')
+            filename = (f"{dir}/{post.company_name}_{post.category}_{str(datetime.datetime.now().date())}.txt").replace(' ', '').replace('.', '')
             my_file = open(filename, "w+")
             my_file.write(f"id в базе данных :    {post.id}")
             my_file.write('\n')
