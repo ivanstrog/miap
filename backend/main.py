@@ -310,7 +310,7 @@ def get_zip(
             my_file.write('\n')
 
             try:
-                with open(f"storage/{post.link.replace('/','').replace(':','')}.html",'w+') as html_file:
+                with open(f"storage/{post.link.replace('/','').replace(':','')[-15:]}.html",'w+') as html_file:
                     html_code = html_file.read()
                     my_file.write(f"\n Подтверждающие документы( html код страницы): \n    {html_code}")
 
