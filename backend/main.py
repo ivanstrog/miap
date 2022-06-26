@@ -305,7 +305,7 @@ def get_zip(
             my_file.write(f"Ссылка на новость (информацию)    {post.link}")
             my_file.write('\n')
             my_file.write('\n')
-            my_file.write(f"Категория инвестиционной активности    {post.link}")
+            my_file.write(f"Категория инвестиционной активности    {post.category}")
             my_file.write('\n')
             my_file.write('\n')
 
