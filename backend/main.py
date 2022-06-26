@@ -1,9 +1,13 @@
+import datetime
+import os
+import shutil
+from zipfile import ZipFile
+
 import uvicorn
 from fastapi import FastAPI, APIRouter, Depends, status, HTTPException
 from typing import Optional
 
 from starlette.middleware.cors import CORSMiddleware
-
 
 from openpyxl import Workbook
 
@@ -212,8 +216,7 @@ def get_docx(
 
     p = document.add_paragraph('Мониторинг инновационной активности предприятий Оренбургской области')
 
-
-    table = document.add_table(rows=posts_data.number_of_posts+1, cols=7)
+    table = document.add_table(rows=posts_data.number_of_posts + 1, cols=7)
     hdr_cells = table.rows[0].cells
     hdr_cells[0].text = "id"
     hdr_cells[1].text = 'Наименование предприятия организации'
@@ -241,9 +244,78 @@ def get_docx(
     return FileResponse(media_type='application/octet-stream', filename=file_path, path=file_path)
 
 
+@app.get('/get_zip_file/')
+def get_zip(
+        left: int,
+        right: int,
+        search_company_name: Optional[str] = None,
+        search_resource: Optional[str] = None,
+        search_title: Optional[str] = None,
+        search_category: Optional[str] = None,
+        search_link: Optional[str] = None,
+        search_doc: Optional[str] = None,
+        min_time: Optional[int] = None,
+        max_time: Optional[int] = None,
+        archive: Optional[bool] = False,
+        post_adapter: PostDatabaseAdapter = Depends(),
+):
+    posts_data = post_adapter.get_posts_from_l_to_r(left=left, right=right,
+                                                    search_company_name=search_company_name,
+                                                    search_resource=search_resource,
+                                                    search_title=search_title,
+                                                    search_category=search_category,
+                                                    search_link=search_link,
+                                                    search_doc=search_doc,
+                                                    min_time=min_time,
+                                                    max_time=max_time,
+                                                    archive=archive)
+
+    os.chdir("backend")
+    dir = 'data'
+    if os.path.exists(dir):
+        shutil.rmtree(dir)
+    else:
+        print("Текущая деректория:", os.getcwd())
+        print('не существует')
+    os.makedirs(dir)
+
+    file_path = 'data.zip'
+    with ZipFile(file_path, 'w') as myzip:
+        for post in posts_data.series:
+            filename = f"{dir}/{post.company_name}_{post.category}_{datetime.datetime.now()}.txt"
+            my_file = open(filename, "w")
+            my_file.write(f"id в базе данных :    {post.id}")
+            my_file.write('\n')
+            my_file.write('\n')
+            my_file.write(f"Наименование предприятия организации :   {post.company_name}")
+            my_file.write('\n')
+            my_file.write('\n')
+            my_file.write(f"Дата новости :  {post.date}")
+            my_file.write('\n')
+            my_file.write('\n')
+            my_file.write(f"Наименование информационного ресурса :{post.resource}")
+            my_file.write('\n')
+            my_file.write('\n')
+            my_file.write(f"Наименование заголовка новости :    {post.title}")
+            my_file.write('\n')
+            my_file.write('\n')
+            my_file.write(f"Ссылка на новость (информацию)    {post.link}")
+            my_file.write('\n')
+            my_file.write('\n')
+            my_file.write(f"Категория инвестиционной активности    {post.link}")
+            my_file.write('\n')
+            my_file.write('\n')
+            my_file.write(f"\n Подтверждающие документы( html код страницы): \n    {post.doc}")
+            my_file.close()
+            myzip.write(filename)
+
+    return FileResponse(media_type='application/octet-stream', filename=file_path, path=file_path)
+
+
 @app.get('/get_post/', response_model=BasePost)
 def get_post_by_id(post_id: int, post_adapter: PostDatabaseAdapter = Depends()):
     return post_adapter.get_post_by_id(post_id=post_id)
+
 
 @app.get('/update_database/')
 def get_post_by_id():
