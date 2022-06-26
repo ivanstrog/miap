@@ -1,0 +1,14 @@
+[Unit]
+Description=Gunicorn instance to serve MyApp
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/home/apps/huobi_management_system
+#Environment="PATH=/var/www/myapp/venv/bin"
+ExecStart=make run
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
