@@ -23,7 +23,7 @@ def add_to_db(res_dict):
     except:
         resource = res_dict["link"]
 
-    file_name = f"storage/{res_dict['link'].replace('/','').replace(':','')}.html"
+    file_name = f"storage/{res_dict['link'].replace('/','').replace(':','')[-15:]}.html"
     post = BasePost(
         company_name=res_dict['company'],
         date=res_dict["date"],
