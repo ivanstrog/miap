@@ -1,19 +1,19 @@
 import Card from "./Card";
 import {useEffect, useState} from "react";
-import {click} from "@testing-library/user-event/dist/click";
-import {CircularProgress, Skeleton} from "@mui/material"
+import {Skeleton} from "@mui/material"
+import {get_news_by_filters} from "./api";
 
 function concat_(str) {
     let s = ''
     for (let i in str) {
         s += str[i];
-        s += '#';
+        s += '$';
     }
     return s.substr(0, Math.max(s.length - 1, 0));
 }
 
 function packer_(mp) {
-    let res = {time: '', category: '',  resource: '', company_name: ''};
+    let res = {time: '', category: '', resource: '', company_name: ''};
     res["time"] = mp["time"];
     res["category"] = concat_(mp["category"]);
     res["resource"] = concat_(mp["resource"]);
@@ -23,17 +23,33 @@ function packer_(mp) {
 
 function News({state, setState, clicked}) {
 
+    const [response, setResponse] = useState({});
+
     useEffect(() => {
         console.log(packer_(state));
     }, [state]);
 
-    useEffect(() => {
+    useEffect( () => {
+        setResponse({})
         console.log('Clicked');
+        get_news_by_filters(packer_(state)).then((response) => {
+            response.json().then(r => {
+                setResponse(r);
+                console.log('get news success!');
+            });
+        }).catch((e) => {
+            console.log(e);
+            setResponse({})
+        });
     }, [clicked]);
 
+    useEffect(() => {
+        console.log("HI");
+        console.log(response['series']);
+    }, [response]);
 
-    return true ? <div style={{marginTop: '0px', width: '70%', marginLeft: '32px'}}>
-        {/*<CircularProgress/>*/}
+
+    return response['series'] === undefined ? <div style={{marginTop: '0px', width: '70%', marginLeft: '32px'}}>
         <Skeleton variant="rectangular" height={240}
                   style={{borderRadius: '12px', width: '70% !important', marginBottom: '16px',}}/>
         <Skeleton variant="rectangular" height={240}
@@ -45,28 +61,13 @@ function News({state, setState, clicked}) {
         width: '70%',
         // background: '#ffffff',
     }}>
-        <Card category='Edsfjdlksfjlkds' company_name={'dsfdsfdsfdsf'} date={'dsfdsfds'} link={'dsffffffffffff'}
-              title={'dsffffffffffffff'}/>
-        <Card category='Edsfjdlksfjlkds' company_name={'dsfdsfdsfdsf'} date={'dsfdsfds'} link={'dsffffffffffff'}
-              title={'dsffffffffffffff'}/>
+        {
+            response['series'].map((elem, index) => {
+                return <Card key={index} category={elem['category']} company_name={elem['company_name']} date={elem['date']} link={elem['resource']}
+                title={elem['title']}/>
+            })
+        }
 
-        <Card category='Edsfjdlksfjlkds' company_name={'dsfdsfdsfdsf'} date={'dsfdsfds'} link={'dsffffffffffff'}
-              title={'dsffffffffffffff'}/>
-
-        <Card category='Edsfjdlksfjlkds' company_name={'dsfdsfdsfdsf'} date={'dsfdsfds'} link={'dsffffffffffff'}
-              title={'dsffffffffffffff'}/>
-
-        <Card category='Edsfjdlksfjlkds' company_name={'dsfdsfdsfdsf'} date={'dsfdsfds'} link={'dsffffffffffff'}
-              title={'dsffffffffffffff'}/>
-
-        <Card category='Edsfjdlksfjlkds' company_name={'dsfdsfdsfdsf'} date={'dsfdsfds'} link={'dsffffffffffff'}
-              title={'dsffffffffffffff'}/>
-
-        <Card category='Edsfjdlksfjlkds' company_name={'dsfdsfdsfdsf'} date={'dsfdsfds'} link={'dsffffffffffff'}
-              title={'dsffffffffffffff'}/>
-
-        <Card category='Edsfjdlksfjlkds' company_name={'dsfdsfdsfdsf'} date={'dsfdsfds'} link={'dsffffffffffff'}
-              title={'dsffffffffffffff'}/>
 
     </div>
 }

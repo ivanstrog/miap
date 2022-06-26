@@ -2,6 +2,9 @@ import uvicorn
 from fastapi import FastAPI, APIRouter, Depends, status, HTTPException
 from typing import Optional
 
+from starlette.middleware.cors import CORSMiddleware
+
+
 from openpyxl import Workbook
 
 from docx import Document
@@ -16,6 +19,21 @@ from fastapi.responses import FileResponse
 from parser import update
 
 app = FastAPI(title='Miap Api')
+
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
@@ -226,13 +244,6 @@ def get_docx(
 @app.get('/get_post/', response_model=BasePost)
 def get_post_by_id(post_id: int, post_adapter: PostDatabaseAdapter = Depends()):
     return post_adapter.get_post_by_id(post_id=post_id)
-
-
-@app.get('/update_database/')
-def get_post_by_id():
-    t = Thread(target=update)
-    t.start()
-    return "обновление запустилось"
 
 
 if __name__ == '__main__':

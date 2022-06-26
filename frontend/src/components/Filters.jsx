@@ -16,6 +16,7 @@ import Chip from '@mui/material/Chip';
 import _without from "lodash/without";
 import {Button} from "@mui/material";
 import {useEffect} from "react";
+import {categories, company_names, resources} from "./data";
 
 //--------------------------------------------------------Date----------------------------------------------------------
 
@@ -56,16 +57,6 @@ const MenuProps = {
         },
     },
 };
-
-const names = [
-    'Инновации',
-    'Патент',
-    'Импортзамещение',
-    'Научные разработки',
-    'Гранты',
-    'Исследования',
-    'Технологии'
-];
 
 function getStyles(name, personName, theme) {
     return {
@@ -123,9 +114,10 @@ function MultipleSelectChip_({label, items, state, setState, operation}) {
                     renderValue={(selected) => (
                         <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5, zIndex: '2092130'}}>
                             {selected.map((value) => (
-                                <Chip style={{background: '#F1F2F4'}} key={value} label={value} onMouseDown={(event) => {
-                                    event.stopPropagation();
-                                }}
+                                <Chip style={{background: '#F1F2F4'}} key={value} label={value}
+                                      onMouseDown={(event) => {
+                                          event.stopPropagation();
+                                      }}
                                       onDelete=
                                           {(event) => handleDelete(event, value)}/>
                             ))}
@@ -172,37 +164,69 @@ function Filters({state, setState, setIsClicked, clicked}) {
                     активности
                 </div>
                 <div style={{display: 'flex', marginBottom: '16px'}}>
-                    <MultipleSelectChip_ items={names} label={'Теги'} state={state} setState={setState} operation={'category'}/>
-                </div>
-                <div style={{marginBottom: '16px', fontWeight: '500px', fontSize: '20px'}}>Источники</div>
-                <div style={{display: 'flex', marginBottom: '16px'}}>
-                    <MultipleSelectChip_ items={names} label={'Ссылки на источники'} state={state} setState={setState} operation={'resource'}/>
+                    <MultipleSelectChip_ items={categories} label={'Теги'} state={state} setState={setState}
+                                         operation={'category'}/>
                 </div>
                 <div style={{marginBottom: '16px', fontWeight: '500px', fontSize: '20px'}}>Предприятия</div>
                 <div style={{display: 'flex', marginBottom: '16px'}}>
-                    <MultipleSelectChip_ items={names} label={'Ссылки на источники'} state={state} setState={setState} operation={'company_name'}/>
+                    <MultipleSelectChip_ items={company_names} label={'Названия предприятий'} state={state}
+                                         setState={setState} operation={'company_name'}/>
                 </div>
-                <Button
-                    variant="contained"
-                    style={{
-                        marginBottom: '16px',
-                        width: '300px',
-                        cursor: 'pointer',
-                        border: 'none',
-                        background: '#0D69F2',
-                        color: 'white',
-                        padding: '8px',
-                        textAlign: 'center',
-                        alignItems: 'center',
-                        borderRadius: '12px',
-                        justifyContent: 'center',
-                        fontSize: '16px',
-                        textTransform: 'none'
-                    }}
-                    onClick={() => {setIsClicked(!clicked)}}
-                >
-                    Применить
-                </Button>
+                <div style={{marginBottom: '16px', fontWeight: '500px', fontSize: '20px'}}>Источники</div>
+                <div style={{display: 'flex', marginBottom: '16px'}}>
+                    <MultipleSelectChip_ items={resources} label={'Ссылки на источники'} state={state}
+                                         setState={setState} operation={'resource'}/>
+                </div>
+                <div style={{display: 'flex', justifyContent: 'space-between', width: '300px'}}>
+                    <>
+                        <Button
+                            variant="contained"
+                            style={{
+                                marginBottom: '16px',
+                                width: '140px',
+                                cursor: 'pointer',
+                                border: 'none',
+                                background: '#0D69F2',
+                                color: 'white',
+                                padding: '8px',
+                                textAlign: 'center',
+                                alignItems: 'center',
+                                borderRadius: '12px',
+                                justifyContent: 'center',
+                                fontSize: '16px',
+                                textTransform: 'none'
+                            }}
+                            onClick={() => {
+                                setIsClicked(!clicked)
+                            }}
+                        >
+                            Применить
+                        </Button>
+                        <Button
+                            variant="contained"
+                            style={{
+                                marginBottom: '16px',
+                                width: '140px',
+                                cursor: 'pointer',
+                                border: 'none',
+                                background: '#e3e4e7',
+                                color: 'black',
+                                padding: '8px',
+                                textAlign: 'center',
+                                alignItems: 'center',
+                                borderRadius: '12px',
+                                justifyContent: 'center',
+                                fontSize: '16px',
+                                textTransform: 'none'
+                            }}
+                            onClick={() => {
+                                window.location.reload();
+                            }}
+                        >
+                            Сбросить
+                        </Button>
+                    </>
+                </div>
             </div>
             <div className={'filters'} style={{
                 width: '400px',
@@ -217,9 +241,6 @@ function Filters({state, setState, setIsClicked, clicked}) {
                 textAlign: 'start',
             }}>
                 <div style={{marginBottom: '16px', fontWeight: '500px', fontSize: '20px'}}>Экспортировать как</div>
-                <div style={{display: 'flex', marginBottom: '16px'}}>
-                    <BasicDatePicker_/>
-                </div>
                 <div style={{display: 'flex', marginBottom: '16px'}}>
                     <Button variant="contained" style={{
                         cursor: 'pointer',
