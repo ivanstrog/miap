@@ -1,5 +1,15 @@
 import {Button} from "@mui/material";
 
+function timeConverter(UNIX_timestamp){
+    let a = new Date(UNIX_timestamp * 1000);
+    let months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+    let year = a.getFullYear();
+    let month = months[a.getMonth()];
+    let date = a.getDate();
+    return date + '.' + month + '.' + year;
+}
+console.log(timeConverter(0));
+
 function Card({company_name, date, resource, title, link, category, id, setArc, arc}) {
     return <div style={{
         marginLeft: '16px',
@@ -57,7 +67,7 @@ function Card({company_name, date, resource, title, link, category, id, setArc, 
             <hr color={'#c4c4c4'} style={{background: '#c4c4c4'}}/>
             <div style={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
                 <div>{'#' + category}</div>
-                <div>{date} </div>
+                <div>{timeConverter(date)} </div>
             </div>
         </div>
     </div>

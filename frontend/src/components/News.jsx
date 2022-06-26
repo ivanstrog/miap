@@ -84,7 +84,7 @@ function News({state, setState, clicked}) {
                         category={elem['category']}
                         company_name={elem['company_name']}
                         date={elem['date']}
-                        link={elem['resource']}
+                        link={elem['link']}
                         id={elem['id']}
                         title={elem['title']}
                         setArc={setArc}

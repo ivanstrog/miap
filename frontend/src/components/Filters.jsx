@@ -18,6 +18,7 @@ import {Button} from "@mui/material";
 import {useEffect} from "react";
 import {categories, company_names, resources} from "./data";
 import {get_archive_by_filters} from "./api";
+import fileDownload from "react-file-download";
 
 //--------------------------------------------------------Date----------------------------------------------------------
 
@@ -147,7 +148,7 @@ function Filters({state, setState, setIsClicked, clicked}) {
             .then(response => response.blob())
             .then(blob => {
                 let fileDownload = require('react-file-download');
-                fileDownload(blob, 'filename.xlsx');
+                fileDownload(blob, 'filtered_news.xlsx');
             });
     }
 
@@ -156,7 +157,16 @@ function Filters({state, setState, setIsClicked, clicked}) {
             .then(response => response.blob())
             .then(blob => {
                 let fileDownload = require('react-file-download');
-                fileDownload(blob, 'filename.docx');
+                fileDownload(blob, 'filtered_news.docx');
+            });
+    }
+
+    function handleDownloadZIP() {
+        get_archive_by_filters(state, 'zip')
+            .then(response => response.blob())
+            .then(blob => {
+                let fileDownload = require('react-file-download');
+                fileDownload(blob, 'filtered_news.zip');
             });
     }
 

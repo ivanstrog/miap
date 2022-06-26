@@ -52,14 +52,16 @@ export const company_names = [
     'МиСТ',
     'ПОЛИМЕРСТРОЙ'];
 
-export const resources = [
-    'Инновации',
-    'Патент',
-    'Импортзамещение',
-    'Научные разработки',
-    'Гранты',
-    'Исследования',
-    'Технология'
+export const resources = ["https://gm56.ru/",
+    "https://mineconomy.orb.ru/",
+    "https://minpromenergo.orb.ru/",
+    "https://orenburg-cci.ru/",
+    "https://orenburg-gov.ru/",
+    "https://orenburg.media/",
+    "https://orenmin.ru/",
+    "https://orensau.ru/",
+    "https://www.orgma.ru/",
+    "http://zbo.ru/"
 ];
 
 
