@@ -61,8 +61,8 @@ def add_to_db(res_dict):
 
 
 def update():
-    for company, get_links, parse_page in COMPANY_SETUPS:
-        parser = UniversalCompanyParser(company, get_links, parse_page)
+    for get_links, parse_page in CALLABLE_PAIRS:
+        parser = UniversalNewsParser(get_links, parse_page)
 
         index = 0
         print(datetime.datetime.now())
@@ -73,9 +73,9 @@ def update():
             index += 1
 
             add_to_db(res)
-
-    for get_links, parse_page in CALLABLE_PAIRS:
-        parser = UniversalNewsParser(get_links, parse_page)
+            
+    for company, get_links, parse_page in COMPANY_SETUPS:
+        parser = UniversalCompanyParser(company, get_links, parse_page)
 
         index = 0
         print(datetime.datetime.now())
