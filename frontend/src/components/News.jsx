@@ -21,15 +21,30 @@ function packer_(mp) {
     return res;
 }
 
+function contains(a, obj) {
+    let i = a.length;
+    while (i--) {
+        if (a[i] === obj) {
+            return true;
+        }
+    }
+    return false;
+}
+
 function News({state, setState, clicked}) {
 
     const [response, setResponse] = useState({});
+    const [arc, setArc] = useState([]);
+
+    useEffect(() => {
+        console.log(contains(arc, 62));
+    }, [arc]);
 
     useEffect(() => {
         console.log(packer_(state));
     }, [state]);
 
-    useEffect( () => {
+    useEffect(() => {
         setResponse({})
         console.log('Clicked');
         get_news_by_filters(packer_(state)).then((response) => {
@@ -63,8 +78,18 @@ function News({state, setState, clicked}) {
     }}>
         {
             response['series'].map((elem, index) => {
-                return <Card key={index} category={elem['category']} company_name={elem['company_name']} date={elem['date']} link={elem['resource']}
-                title={elem['title']}/>
+                return contains(arc, elem['id']) ? null :
+                    <Card
+                        key={index}
+                        category={elem['category']}
+                        company_name={elem['company_name']}
+                        date={elem['date']}
+                        link={elem['resource']}
+                        id={elem['id']}
+                        title={elem['title']}
+                        setArc={setArc}
+                        arc={arc}
+                    />
             })
         }
 

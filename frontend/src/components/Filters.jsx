@@ -17,6 +17,7 @@ import _without from "lodash/without";
 import {Button} from "@mui/material";
 import {useEffect} from "react";
 import {categories, company_names, resources} from "./data";
+import {get_archive_by_filters} from "./api";
 
 //--------------------------------------------------------Date----------------------------------------------------------
 
@@ -141,6 +142,24 @@ function MultipleSelectChip_({label, items, state, setState, operation}) {
 }
 
 function Filters({state, setState, setIsClicked, clicked}) {
+    function handleDownloadXLSX() {
+        get_archive_by_filters(state, 'xlsx')
+            .then(response => response.blob())
+            .then(blob => {
+                let fileDownload = require('react-file-download');
+                fileDownload(blob, 'filename.xlsx');
+            });
+    }
+
+    function handleDownloadDOCX() {
+        get_archive_by_filters(state, 'docx')
+            .then(response => response.blob())
+            .then(blob => {
+                let fileDownload = require('react-file-download');
+                fileDownload(blob, 'filename.docx');
+            });
+    }
+
     return <>
         <StickyBox offsetTop={20} offsetBottom={20}>
             <div className={'filters'} style={{
@@ -245,29 +264,47 @@ function Filters({state, setState, setIsClicked, clicked}) {
                     <Button variant="contained" style={{
                         cursor: 'pointer',
                         border: 'none',
-                        background: '#0D69F2',
-                        color: 'white',
+                        background: '#e3e4e7',
+                        color: 'black',
                         padding: '8px',
                         textAlign: 'center',
                         width: '70px',
                         alignItems: 'center',
                         borderRadius: '12px',
                         justifyContent: 'center'
-                    }}>.XLS
+                    }} onClick={handleDownloadXLSX}>.XLS
                     </Button>
                     <Button variant="contained" style={{
                         marginLeft: '16px',
                         cursor: 'pointer',
                         border: 'none',
-                        background: '#0D69F2',
-                        color: 'white',
+                        background: '#e3e4e7',
+                        color: 'black',
                         padding: '8px',
                         textAlign: 'center',
                         width: '70px',
                         alignItems: 'center',
                         borderRadius: '12px',
                         justifyContent: 'center'
-                    }}>.DOCX
+                    }}
+                    onClick={handleDownloadDOCX}
+                    >.DOCX
+                    </Button>
+                    <Button variant="contained" style={{
+                        marginLeft: '16px',
+                        cursor: 'pointer',
+                        border: 'none',
+                        background: '#e3e4e7',
+                        color: 'black',
+                        padding: '8px',
+                        textAlign: 'center',
+                        width: '70px',
+                        alignItems: 'center',
+                        borderRadius: '12px',
+                        justifyContent: 'center'
+                    }}
+                            onClick={handleDownloadDOCX}
+                    >.ZIP
                     </Button>
                 </div>
             </div>

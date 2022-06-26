@@ -1,6 +1,6 @@
 import {Button} from "@mui/material";
 
-function Card({company_name, date, resource, title, link, category}) {
+function Card({company_name, date, resource, title, link, category, id, setArc, arc}) {
     return <div style={{
         marginLeft: '16px',
         background: '#ffffff',
@@ -11,22 +11,34 @@ function Card({company_name, date, resource, title, link, category}) {
         justifyContent: 'left',
         alignItems: 'flex-start',
         padding: '16px',
-        textAlign:'left',
+        textAlign: 'left',
     }}>
         <button
             color="error"
             style={{
-            background: 'transparent',
-            color: '#de3401',
-            fontWeight: '600',
-            border: 'none',
-            marginRight: '0',
-            marginLeft: 'auto',
-            marginBottom: '-16px',
-            cursor: 'pointer',
+                background: 'transparent',
+                color: '#de3401',
+                fontWeight: '600',
+                border: 'none',
+                marginRight: '0',
+                marginLeft: 'auto',
+                marginBottom: '-16px',
+                cursor: 'pointer',
                 textTransform: 'none',
-        }}>В архив</button>
-        <div style={{marginBottom: '14px', color: '#062757', fontWeight: '600', alignItems: 'flex-start', fontSize: '14px'}}>{company_name}</div>
+            }}
+                onClick={() => {
+                    setArc([...arc, id])
+                }
+            }
+        >В архив
+        </button>
+        <div style={{
+            marginBottom: '14px',
+            color: '#062757',
+            fontWeight: '600',
+            alignItems: 'flex-start',
+            fontSize: '14px'
+        }}>{company_name}</div>
         <div style={{
             width: '100%',
             fontSize: '20px',
@@ -35,7 +47,7 @@ function Card({company_name, date, resource, title, link, category}) {
         }}>{title}
         </div>
         <div style={{marginBottom: 0, marginTop: 'auto', width: '100%'}}>
-            <Button  variant="outlined" size="small" onClick={() => window.open(link)} style={{
+            <Button variant="outlined" size="small" onClick={() => window.open(link)} style={{
                 textTransform: 'none',
                 marginTop: '16px',
                 borderColor: '#0D69F2',
