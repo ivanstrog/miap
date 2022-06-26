@@ -26,7 +26,7 @@ function Card({company_name, date, resource, title, link, category}) {
             cursor: 'pointer',
                 textTransform: 'none',
         }}>В архив</button>
-        <div style={{marginBottom: '14px', color: '#062757', fontWeight: '600', alignItems: 'flex-start'}}>{company_name}</div>
+        <div style={{marginBottom: '14px', color: '#062757', fontWeight: '600', alignItems: 'flex-start', fontSize: '14px'}}>{company_name}</div>
         <div style={{
             width: '100%',
             fontSize: '20px',
@@ -35,7 +35,7 @@ function Card({company_name, date, resource, title, link, category}) {
         }}>{title}
         </div>
         <div style={{marginBottom: 0, marginTop: 'auto', width: '100%'}}>
-            <Button  variant="outlined" size="small" style={{
+            <Button  variant="outlined" size="small" onClick={() => window.open(link)} style={{
                 textTransform: 'none',
                 marginTop: '16px',
                 borderColor: '#0D69F2',

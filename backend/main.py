@@ -1,6 +1,9 @@
 import uvicorn
 from fastapi import FastAPI, APIRouter, Depends, status, HTTPException
 from typing import Optional
+
+from starlette.middleware.cors import CORSMiddleware
+
 from database_adapter.models import BasePost, PostSeries
 from threading import Thread
 from datetime import datetime
@@ -8,6 +11,21 @@ from datetime import datetime
 from database_adapter.post_adapter import PostDatabaseAdapter
 
 app = FastAPI(title='Miap Api')
+
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
@@ -44,10 +62,11 @@ def get_posts(
         search_category: Optional[str] = None,
         search_link: Optional[str] = None,
         search_doc: Optional[str] = None,
-        min_time:Optional[int] = None,
-        max_time:Optional[int] = None,
+        min_time: Optional[int] = None,
+        max_time: Optional[int] = None,
         post_adapter: PostDatabaseAdapter = Depends(),
 ) -> PostSeries:
+    print(search_company_name)
     return post_adapter.get_posts_from_l_to_r(left=left, right=right,
                                               search_company_name=search_company_name,
                                               search_resource=search_resource,
@@ -55,8 +74,8 @@ def get_posts(
                                               search_category=search_category,
                                               search_link=search_link,
                                               search_doc=search_doc,
-                                              min_time = min_time,
-                                              max_time = max_time)
+                                              min_time=min_time,
+                                              max_time=max_time)
 
 
 @app.get('/get_post/', response_model=BasePost)
