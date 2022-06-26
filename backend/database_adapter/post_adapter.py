@@ -56,7 +56,9 @@ class PostDatabaseAdapter:
             search_title: Optional[str] = None,
             search_category: Optional[str] = None,
             search_link: Optional[str] = None,
-            search_doc: Optional[str] = None
+            search_doc: Optional[str] = None,
+            min_time: Optional[int] = None,
+            max_time: Optional[int] = None
     ) -> PostSeries:
 
         with create_session() as session:
@@ -66,7 +68,10 @@ class PostDatabaseAdapter:
                 *[search_title is None or DataPost.title.in_(search_title.split('#') )],
                 *[search_category is None or DataPost.category.in_(search_category.split('#')) ],
                 *[ search_link is None or DataPost.link.in_(search_link.split('#'))],
-                *[search_doc is None or DataPost.doc.in_(search_doc.split('#'))])
+                *[search_doc is None or DataPost.doc.in_(search_doc.split('#'))],
+                *[min_time is None or DataPost.date >= min_time],
+                *[max_time is None or DataPost.date <= max_time])
+
             data_set = session.query(DataPost).filter(*filters).order_by(DataPost.date.desc())[left:right]
             #[left: right]
 

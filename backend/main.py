@@ -44,6 +44,8 @@ def get_posts(
         search_category: Optional[str] = None,
         search_link: Optional[str] = None,
         search_doc: Optional[str] = None,
+        min_time:Optional[int] = None,
+        max_time:Optional[int] = None,
         post_adapter: PostDatabaseAdapter = Depends(),
 ) -> PostSeries:
     return post_adapter.get_posts_from_l_to_r(left=left, right=right,
@@ -52,7 +54,9 @@ def get_posts(
                                               search_title=search_title,
                                               search_category=search_category,
                                               search_link=search_link,
-                                              search_doc=search_doc)
+                                              search_doc=search_doc,
+                                              min_time = min_time,
+                                              max_time = max_time)
 
 
 @app.get('/get_post/', response_model=BasePost)
