@@ -6,10 +6,6 @@ const zip_url = "http://localhost:8000/get_zip_file/?left=0&right=1000000";
 export async function get_news_by_filters(filters) {
     let end = ''
 
-    if (filters['time'].length > 0) {
-        end += '&time=' +  filters['time'];
-    }
-
     if (filters['category'].length > 0) {
         end += '&search_category=' +  filters['category'];
     }

@@ -6,7 +6,11 @@ function timeConverter(UNIX_timestamp){
     let year = a.getFullYear();
     let month = months[a.getMonth()];
     let date = a.getDate();
+    if (UNIX_timestamp === 0) {
+        return "Без даты"
+    }
     return date + '.' + month + '.' + year;
+
 }
 console.log(timeConverter(0));
 
