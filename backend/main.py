@@ -4,11 +4,11 @@ from typing import Optional
 
 from openpyxl import Workbook
 
+from docx import Document
+from docx.shared import Inches
+
 from database_adapter.models import BasePost, PostSeries
 from threading import Thread
-from datetime import datetime
-from openpyxl.utils import get_column_letter
-import pandas as pd
 
 from database_adapter.post_adapter import PostDatabaseAdapter
 from fastapi.responses import FileResponse
@@ -78,8 +78,8 @@ def get_posts(
                                               archive=archive)
 
 
-@app.get('/get_file/')
-def get_posts(
+@app.get('/get_xlsx_file/')
+def get_xlsx(
         left: int,
         right: int,
         search_company_name: Optional[str] = None,
@@ -160,9 +160,66 @@ def get_posts(
 
     worksheet.row_dimensions[1].height = 50
 
-
-
     workbook.save(file_path)
+    return FileResponse(media_type='application/octet-stream', filename=file_path, path=file_path)
+
+
+@app.get('/get_docx_file/')
+def get_docx(
+        left: int,
+        right: int,
+        search_company_name: Optional[str] = None,
+        search_resource: Optional[str] = None,
+        search_title: Optional[str] = None,
+        search_category: Optional[str] = None,
+        search_link: Optional[str] = None,
+        search_doc: Optional[str] = None,
+        min_time: Optional[int] = None,
+        max_time: Optional[int] = None,
+        archive: Optional[bool] = False,
+        post_adapter: PostDatabaseAdapter = Depends(),
+):
+    posts_data = post_adapter.get_posts_from_l_to_r(left=left, right=right,
+                                                    search_company_name=search_company_name,
+                                                    search_resource=search_resource,
+                                                    search_title=search_title,
+                                                    search_category=search_category,
+                                                    search_link=search_link,
+                                                    search_doc=search_doc,
+                                                    min_time=min_time,
+                                                    max_time=max_time,
+                                                    archive=archive)
+
+    document = Document()
+
+    p = document.add_paragraph('Мониторинг инновационной активности предприятий Оренбургской области')
+
+
+    table = document.add_table(rows=posts_data.number_of_posts+1, cols=7)
+    hdr_cells = table.rows[0].cells
+    hdr_cells[0].text = "id"
+    hdr_cells[1].text = 'Наименование предприятия организации'
+    hdr_cells[2].text = 'Дата новости'
+    hdr_cells[3].text = 'Наименование информационного ресурса'
+    hdr_cells[4].text = 'Наименование заголовка новости'
+    hdr_cells[5].text = 'Ссылка на новость (информацию)'
+    hdr_cells[6].text = 'Категория инвестиционной активности'
+
+    for j in range(posts_data.number_of_posts):
+        row_cells = table.add_row().cells
+        row_cells[0].text = str(posts_data.series[j].id)
+        row_cells[1].text = str(posts_data.series[j].company_name)
+        row_cells[2].text = str(posts_data.series[j].date)
+        row_cells[3].text = str(posts_data.series[j].resource)
+        row_cells[4].text = str(posts_data.series[j].title)
+        row_cells[5].text = str(posts_data.series[j].link)
+        row_cells[6].text = str(posts_data.series[j].category)
+
+    document.add_page_break()
+
+    file_path = 'data.docx'
+    document.save(file_path)
+
     return FileResponse(media_type='application/octet-stream', filename=file_path, path=file_path)
 
 
