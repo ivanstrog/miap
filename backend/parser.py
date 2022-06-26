@@ -20,30 +20,38 @@ for get_links, parse_page in CALLABLE_PAIRS:
         print(datetime.datetime.now())
 '''
 
-for company, get_links, parse_page in COMPANY_SETUPS:
-    parser = UniversalCompanyParser(company, get_links, parse_page)
 
-    index  = 0
-    print(datetime.datetime.now())
-    for res in parser.get_news():
-        print(res)
+def update():
+    for company, get_links, parse_page in COMPANY_SETUPS:
+        parser = UniversalCompanyParser(company, get_links, parse_page)
+
+        index  = 0
         print(datetime.datetime.now())
-        print(time.time())
-        index += 1
+        for res in parser.get_news():
+            print(res)
+            print(datetime.datetime.now())
+            print(time.time())
+            index += 1
 
 
-        post = BasePost(
-            company_name=res['company'],
-            date= time.time() ,
-            resource=res['link'],
-            title=res['header'],
-            link=res['link'],
-            category=res['category'],
-            doc='html'
-        )
+            post = BasePost(
+                company_name=res['company'],
+                date= time.time() ,
+                resource=res['link'],
+                title=res['header'],
+                link=res['link'],
+                category=res['category'],
+                doc='html',
+                archive=False
+            )
 
-        try:
-            post_id =  PostDatabaseAdapter.create_post(post_model=post)
-            print(f'добавлен в базу, id = {post_id}')
-        except Exception as e:
-            print(e)
+            try:
+                post_id =  PostDatabaseAdapter.create_post(post_model=post)
+                print(f'добавлен в базу, id = {post_id}')
+            except Exception as e:
+                print(e)
+
+
+
+if __name__ == "__main__":
+    update()

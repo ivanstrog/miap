@@ -1,6 +1,6 @@
 from typing import Optional, Union
 
-from database_adapter.models import DataPost, BasePost, PostSeries
+from database_adapter.models import DataPost, BasePost, PostSeries, ResponsePost
 from database_adapter.database import create_session
 
 from sqlalchemy import or_
@@ -19,6 +19,7 @@ class PostDatabaseAdapter:
             'link': post_model.link,
             'category': post_model.category,
             'doc': post_model.doc,
+            'archive' : post_model.archive
         }
 
     @staticmethod
@@ -48,6 +49,14 @@ class PostDatabaseAdapter:
             session.query(DataPost).filter(DataPost.id == post_id).delete()
 
     @staticmethod
+    def archive_post(post_id:int):
+        with create_session() as session:
+            post = session.query(DataPost).filter(DataPost.id == post_id).first()
+            post.archive = not post.archive
+            session.flush()
+
+
+    @staticmethod
     def get_posts_from_l_to_r(
             left: int,
             right: int,
@@ -58,7 +67,8 @@ class PostDatabaseAdapter:
             search_link: Optional[str] = None,
             search_doc: Optional[str] = None,
             min_time: Optional[int] = None,
-            max_time: Optional[int] = None
+            max_time: Optional[int] = None,
+            archive: Optional[bool] = False
     ) -> PostSeries:
 
         with create_session() as session:
@@ -70,14 +80,15 @@ class PostDatabaseAdapter:
                 *[ search_link is None or DataPost.link.in_(search_link.split('#'))],
                 *[search_doc is None or DataPost.doc.in_(search_doc.split('#'))],
                 *[min_time is None or DataPost.date >= min_time],
-                *[max_time is None or DataPost.date <= max_time])
+                *[max_time is None or DataPost.date <= max_time],
+                *[DataPost.archive == archive])
 
             data_set = session.query(DataPost).filter(*filters).order_by(DataPost.date.desc())[left:right]
             #[left: right]
 
             posts: PostSeries = PostSeries()
             for i in data_set:
-                posts.series.append(BasePost.from_orm(i))
+                posts.series.append(ResponsePost.from_orm(i))
                 posts.number_of_posts += 1
         return posts
 

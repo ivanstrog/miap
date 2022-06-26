@@ -4,7 +4,7 @@ from sqlalchemy import (
     Column,
     Integer,
     String,
-    DATETIME
+    BOOLEAN
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -27,6 +27,7 @@ class DataPost(Base):
     link = Column(String, unique=True)
     category = Column(String)
     doc = Column(String)
+    archive = Column(BOOLEAN)
 
 
 Base.metadata.create_all(engine)
@@ -40,11 +41,27 @@ class BasePost(BaseModel):
     link: str
     category: str
     doc: str
+    archive : bool
 
     class Config:
         orm_mode = True
 
 
+
+class ResponsePost(BaseModel):
+    id : int
+    company_name: str
+    date: int
+    resource: str
+    title: str
+    link: str
+    category: str
+    doc: str
+    archive : bool
+
+    class Config:
+        orm_mode = True
+
 class PostSeries(BaseModel):
     number_of_posts: int = 0
-    series: List[BasePost] = []
+    series: List[ResponsePost] = []

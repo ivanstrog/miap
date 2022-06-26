@@ -1,11 +1,19 @@
 import uvicorn
 from fastapi import FastAPI, APIRouter, Depends, status, HTTPException
 from typing import Optional
+
+from openpyxl import Workbook
+
 from database_adapter.models import BasePost, PostSeries
 from threading import Thread
 from datetime import datetime
+from openpyxl.utils import get_column_letter
+import pandas as pd
 
 from database_adapter.post_adapter import PostDatabaseAdapter
+from fastapi.responses import FileResponse
+
+from parser import update
 
 app = FastAPI(title='Miap Api')
 
@@ -34,6 +42,15 @@ def delete_post(
     return status.HTTP_201_CREATED
 
 
+@app.post('/archive/')
+def archive_post(
+        post_id: int,
+        post_adapter: PostDatabaseAdapter = Depends(),
+):
+    post_adapter.archive_post(post_id=post_id)
+    return status.HTTP_201_CREATED
+
+
 @app.get('/posts/', response_model=PostSeries)
 def get_posts(
         left: int,
@@ -44,8 +61,9 @@ def get_posts(
         search_category: Optional[str] = None,
         search_link: Optional[str] = None,
         search_doc: Optional[str] = None,
-        min_time:Optional[int] = None,
-        max_time:Optional[int] = None,
+        min_time: Optional[int] = None,
+        max_time: Optional[int] = None,
+        archive: Optional[bool] = False,
         post_adapter: PostDatabaseAdapter = Depends(),
 ) -> PostSeries:
     return post_adapter.get_posts_from_l_to_r(left=left, right=right,
@@ -55,13 +73,109 @@ def get_posts(
                                               search_category=search_category,
                                               search_link=search_link,
                                               search_doc=search_doc,
-                                              min_time = min_time,
-                                              max_time = max_time)
+                                              min_time=min_time,
+                                              max_time=max_time,
+                                              archive=archive)
+
+
+@app.get('/get_file/')
+def get_posts(
+        left: int,
+        right: int,
+        search_company_name: Optional[str] = None,
+        search_resource: Optional[str] = None,
+        search_title: Optional[str] = None,
+        search_category: Optional[str] = None,
+        search_link: Optional[str] = None,
+        search_doc: Optional[str] = None,
+        min_time: Optional[int] = None,
+        max_time: Optional[int] = None,
+        archive: Optional[bool] = False,
+        post_adapter: PostDatabaseAdapter = Depends(),
+):
+    posts_data = post_adapter.get_posts_from_l_to_r(left=left, right=right,
+                                                    search_company_name=search_company_name,
+                                                    search_resource=search_resource,
+                                                    search_title=search_title,
+                                                    search_category=search_category,
+                                                    search_link=search_link,
+                                                    search_doc=search_doc,
+                                                    min_time=min_time,
+                                                    max_time=max_time,
+                                                    archive=archive)
+
+    file_path = 'data.xlsx'
+
+    workbook = Workbook()
+
+    # Get active worksheet/tab
+    worksheet = workbook.active
+    worksheet.title = 'data'
+
+    # Define the titles for columns
+    columns = [
+        'ID',
+        'Наименование  предприятия  организации',
+        'Дата новости  (информации)',
+        'Наименование  информационного  ресурса',
+        'Наименование  заголовка новости  (информации)',
+        'Ссылка на новость  (информацию)',
+        'Категория   инвестиционной  активности'
+    ]
+    row_num = 1
+
+    # Assign the titles for each cell of the header
+    for col_num, column_title in enumerate(columns, 1):
+        cell = worksheet.cell(row=row_num, column=col_num)
+        cell.value = column_title
+
+    # Iterate through all movies
+
+    for post in posts_data.series:
+        row_num += 1
+        # Define the data for each cell in the row
+        print(type(post))
+        row = [
+            post.id,
+            post.company_name,
+            post.date,
+            post.resource,
+            post.title,
+            post.link,
+            post.category,
+        ]
+
+        # Assign the data for each cell of the row
+        for col_num, cell_value in enumerate(row, 1):
+            cell = worksheet.cell(row=row_num, column=col_num)
+            cell.value = cell_value
+
+    worksheet.column_dimensions['A'].width = 5.0
+    worksheet.column_dimensions['B'].width = 40.0
+    worksheet.column_dimensions['C'].width = 7.0
+    worksheet.column_dimensions['D'].width = 80.0
+    worksheet.column_dimensions['E'].width = 80.0
+    worksheet.column_dimensions['F'].width = 80.0
+    worksheet.column_dimensions['G'].width = 80.0
+
+    worksheet.row_dimensions[1].height = 50
+
+
+
+    workbook.save(file_path)
+    return FileResponse(media_type='application/octet-stream', filename=file_path, path=file_path)
 
 
 @app.get('/get_post/', response_model=BasePost)
 def get_post_by_id(post_id: int, post_adapter: PostDatabaseAdapter = Depends()):
     return post_adapter.get_post_by_id(post_id=post_id)
+
+
+@app.get('/update_database/')
+def get_post_by_id():
+    t = Thread(target=update)
+    t.start()
+    return "обновление запустилось"
 
 
 if __name__ == '__main__':
