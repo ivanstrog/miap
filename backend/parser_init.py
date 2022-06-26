@@ -15,6 +15,8 @@ from database_adapter.models import BasePost
 
 
 def add_to_db(res_dict):
+    if res_dict["date"] is None:
+        res_dict["date"] = 0
     resource = ""
     try:
         resource = res_dict["link"].split('/')[2]
@@ -24,7 +26,7 @@ def add_to_db(res_dict):
     file_name = f"storage/{res_dict['link'].replace('/','')}.html"
     post = BasePost(
         company_name=res_dict['company'],
-        date=time.time(),
+        date=res_dict["date"],
         resource=resource,
         title=res_dict['header'],
         link=res_dict['link'],
