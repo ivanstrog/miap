@@ -47,3 +47,8 @@ export async function get_archive_by_filters(filters, type) {
     }
     return fetch(url + end, {})
 }
+
+export async function start_parsers() {
+    let url = 'http://localhost:8000/update_database/';
+    return fetch(url, {})
+}

@@ -17,7 +17,7 @@ import _without from "lodash/without";
 import {Button} from "@mui/material";
 import {useEffect} from "react";
 import {categories, company_names, resources} from "./data";
-import {get_archive_by_filters} from "./api";
+import {get_archive_by_filters, start_parsers} from "./api";
 import fileDownload from "react-file-download";
 
 //--------------------------------------------------------Date----------------------------------------------------------
@@ -313,8 +313,40 @@ function Filters({state, setState, setIsClicked, clicked}) {
                         borderRadius: '12px',
                         justifyContent: 'center'
                     }}
-                            onClick={handleDownloadDOCX}
+                            onClick={handleDownloadZIP}
                     >.ZIP
+                    </Button>
+                </div>
+            </div>
+            <div className={'filters'} style={{
+                width: '400px',
+                background: '#ffffff',
+                borderRadius: '12px',
+                justifyContent: 'start',
+                display: 'flex',
+                flexDirection: 'column',
+                paddingLeft: '16px',
+                paddingTop: '16px',
+                marginTop: '16px',
+                textAlign: 'start',
+            }}>
+                <div style={{marginBottom: '16px', fontWeight: '500px', fontSize: '20px'}}>Запустить парсеры</div>
+                <div style={{display: 'flex', marginBottom: '16px'}}>
+                    <Button variant="contained" style={{
+                        cursor: 'pointer',
+                        border: 'none',
+                        background: '#e3e4e7',
+                        color: 'black',
+                        padding: '8px',
+                        textAlign: 'center',
+                        width: '300px',
+                        alignItems: 'center',
+                        borderRadius: '12px',
+                        justifyContent: 'center',
+                        textTransform: 'none'
+                    }}
+                            onClick={start_parsers}
+                    >Запустить парсеры
                     </Button>
                 </div>
             </div>
