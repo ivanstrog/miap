@@ -23,7 +23,7 @@ def add_to_db(res_dict):
     except:
         resource = res_dict["link"]
 
-    file_name = f"storage/{res_dict['link'].replace('/','')}.html"
+    file_name = f"storage/{res_dict['link'].replace('/','').replace(':','')}.html"
     post = BasePost(
         company_name=res_dict['company'],
         date=res_dict["date"],
@@ -47,12 +47,15 @@ def add_to_db(res_dict):
     except Exception as e:
         print(e)
 
-    doc_file = open(file_name, 'w')
-    doc_file.write(get(res_dict["link"], headers={
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) '
-                          'AppleWebKit/537.36 (KHTML, like Gecko) '
-                          'Chrome/103.0.0.0 Safari/537.36'}, timeout=1).text)
-    doc_file.close()
+    try:
+        doc_file = open(file_name, 'w')
+        doc_file.write(get(res_dict["link"], headers={
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) '
+                              'AppleWebKit/537.36 (KHTML, like Gecko) '
+                              'Chrome/103.0.0.0 Safari/537.36'}, timeout=1).text)
+        doc_file.close()
+    except Exception as e:
+        pass
 
 
 
